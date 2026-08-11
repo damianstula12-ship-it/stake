@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>VYRA — Casino Demo</title>
+<style>
+:root{--bg:#071a24;--top:#102a36;--panel:#173541;--panel2:#1b3e4b;--line:#2b4f5d;--text:#f5f8fa;--muted:#9bb7c5;--blue:#1978e7;--gold:#ffc76a}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+body{min-height:100vh}.app{max-width:900px;margin:auto;min-height:100vh;background:#0b222d}
+.top{height:84px;background:#112d39;border-bottom:1px solid #193b47;display:flex;align-items:center;padding:8px 16px;gap:12px;position:sticky;top:0;z-index:20}
+.logo{font-family:Georgia,serif;font-size:56px;font-weight:700;font-style:italic;line-height:1}.wallet{margin-left:auto;height:55px;border-radius:14px;display:flex;overflow:hidden;background:#091b23;box-shadow:0 0 0 1px #1a3c48}.wallet span{display:flex;align-items:center;padding:0 15px;font-size:18px;font-weight:750}.wallet button{width:56px;background:var(--blue);font-size:22px}.topbtn{width:39px;background:transparent;font-size:25px}
+main{padding:16px 24px 102px}.page{display:none}.page.active{display:block}
+.banner{height:255px;background:#173743;border:1px solid #244a57;border-radius:16px;padding:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden}.banner-copy{max-width:48%}.tag{display:inline-block;background:#19ced2;color:#061a20;border-radius:7px;padding:4px 9px;font-weight:800;font-size:12px}.banner h1{font-size:29px;margin:17px 0 7px}.banner p{font-size:17px;line-height:1.55;color:var(--muted);margin:0 0 16px}.play{background:transparent;border:2px solid #8db8c7;border-radius:10px;padding:11px 21px;font-weight:700}.art{width:43%;height:185px;border-radius:20px;background:linear-gradient(145deg,#147be9,#4435b8);display:grid;place-items:center;font-size:82px}
+.search{height:61px;margin:18px 0;border:2px solid #345b6a;border-radius:15px;background:#0a2029;color:var(--muted);display:flex;align-items:center;padding:0 17px;font-size:19px}.search b{font-size:31px;margin-right:13px}
+.pills{display:flex;gap:9px;overflow:auto;padding-bottom:3px}.pill{white-space:nowrap;background:#132f3b;border:1px solid #284b58;color:#a7c0cb;border-radius:28px;padding:12px 18px;font-weight:700}.pill.active{background:#456779;color:#fff}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:25px 0 12px}.section-head h2{font-size:22px;margin:0}.section-head a{font-weight:700}
+.games{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.game{background:#153440;border:1px solid #254956;border-radius:13px;overflow:hidden}.gameart{height:154px;display:grid;place-items:center;font-size:65px;background:linear-gradient(145deg,#7b3ff3,#ef3c71)}.game:nth-child(2) .gameart{background:linear-gradient(145deg,#0677e7,#13cde3)}.game:nth-child(3) .gameart{background:linear-gradient(145deg,#6e35f1,#ec3bc6)}.game:nth-child(4) .gameart{background:linear-gradient(145deg,#ffb52f,#d94242)}.game:nth-child(5) .gameart{background:linear-gradient(145deg,#0cae83,#1756c5)}.game:nth-child(6) .gameart{background:linear-gradient(145deg,#3446b9,#16bce0)}.gameinfo{padding:10px 11px}.gameinfo h3{font-size:14px;margin:0 0 3px}.gameinfo small{color:var(--muted)}
+.live{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.livecard{background:#173743;border-radius:14px;border:1px solid #294b58;overflow:hidden}.liveart{height:150px;display:grid;place-items:center;font-size:72px;background:linear-gradient(145deg,#c62df5,#ff7c30)}.livecard:nth-child(2) .liveart{background:linear-gradient(145deg,#ff3c87,#6336ef)}
+.table{border:1px solid #294c59;border-radius:14px;overflow:hidden;background:#12303b}.tr{display:grid;grid-template-columns:1.15fr 1fr 1fr;padding:15px 17px;border-bottom:1px solid #31525e}.tr:last-child{border-bottom:0}.head{background:#102832;color:#a8c0ca;font-weight:700}.ok{color:#a3bfca}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(900px,100%);height:78px;background:#102d39;border-top:1px solid #254855;display:flex;z-index:40}.nav button{position:relative;flex:1;background:transparent;color:#9bb7c4;font-size:11px;font-weight:650;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.nav b{font-size:24px}.nav .active{color:#fff}.nav .active:before{content:"";position:absolute;top:-1px;width:62px;height:4px;background:#fff}
+.card{background:#14333f;border:1px solid #284c59;border-radius:16px;padding:19px;margin-bottom:15px}.card h2{margin:0 0 8px}.muted{color:var(--muted)}
+.stat{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #2b4d59}.stat:last-child{border:0}.edit input,.edit select{width:100%;background:#0a2029;color:#fff;border:1px solid #315564;border-radius:10px;padding:12px;margin:6px 0 12px}.save{width:100%;background:var(--blue);padding:12px;border-radius:10px;font-weight:700}
+.overlay{position:fixed;inset:0;background:rgba(3,14,20,.83);display:none;align-items:flex-start;justify-content:center;padding:88px 18px 90px;z-index:100;overflow:auto}.overlay.open{display:flex}.modal{width:min(770px,100%);background:#153541;border-radius:17px;padding:22px;border:1px solid #2a4e5c}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.modalhead h2{margin:0;font-size:27px}.x{background:none;font-size:32px;color:#a8c1cc}.vip{border:4px solid #ffd27a;border-radius:19px;background:#0d222c;padding:27px}.vip h3{font-size:28px;margin:0 0 30px}.vip .pct{font-size:23px;font-weight:700}.bar{height:17px;background:#06151c;border-radius:20px;overflow:hidden;margin:10px 0 13px}.bar i{display:block;width:82.7%;height:100%;background:#ffc05b;border-radius:20px}.next{font-size:20px;color:#a7c2cf}.reward{margin-top:14px;padding:18px;background:#1a3c49;border-radius:15px;display:flex;align-items:center;gap:18px}.rewardicon{font-size:43px}.reward h3{margin:0 0 4px}.reward p{margin:0;color:var(--muted)}.claim{margin-left:auto;background:var(--blue);padding:12px 20px;border-radius:11px;font-weight:700}
+.side{
+  position:fixed;
+  top:78px;
+  right:max(calc((100vw - 900px)/2),0px);
+  width:315px;
+  background:#173541;
+  border:1px solid #244a57;
+  border-top:0;
+  border-radius:0 0 0 14px;
+  z-index:80;
+  display:none;
+  padding:8px 10px 14px;
+  box-shadow:0 12px 28px rgba(0,0,0,.28)
+}
+.side.open{display:block}
+.side:before{
+  content:"";
+  position:absolute;
+  top:-9px;
+  right:116px;
+  width:18px;height:18px;
+  background:#173541;
+  transform:rotate(45deg);
+  border-left:1px solid #244a57;
+  border-top:1px solid #244a57
+}
+.side button{
+  width:100%;
+  height:57px;
+  background:transparent;
+  text-align:left;
+  padding:0 12px;
+  border-radius:9px;
+  font-size:17px;
+  font-weight:650;
+  display:flex;
+  align-items:center;
+  gap:14px
+}
+.side button:hover{background:#214754}
+
+@media(max-width:650px){main{padding:13px 12px 102px}.top{height:78px;padding:8px 11px}.logo{font-size:53px}.wallet{height:49px}.wallet span{font-size:16px;padding:0 10px}.topbtn{width:34px;font-size:22px}.banner{height:225px;padding:17px}.banner h1{font-size:24px}.banner p{font-size:15px}.art{height:160px;font-size:65px}.games{grid-template-columns:repeat(3,1fr);gap:7px}.gameart{height:125px;font-size:48px}.gameinfo{padding:8px}.gameinfo h3{font-size:12px}.liveart{height:120px}.tr{padding:14px 9px;font-size:14px}.side{top:78px;width:78%;max-width:315px;padding:8px 9px 12px}.side button{height:56px;font-size:17px}.side:before{right:112px}.modal{padding:15px}.vip{padding:21px}.reward{align-items:flex-start}.claim{padding:10px 14px}}
+@media(max-width:430px){.games{grid-template-columns:repeat(2,1fr)}.banner-copy{max-width:53%}.art{width:42%}.wallet span{font-size:15px}}
+
+.vip-modal{padding-bottom:22px}
+.vip-modal .modalhead{margin-bottom:18px}
+.vip-modal .modalhead h2{font-size:27px}
+.vip{
+  position:relative;
+  border:4px solid #ffd27a;
+  border-radius:19px;
+  background:#0d222c;
+  padding:36px 28px 28px;
+  min-height:255px;
+  overflow:hidden;
+}
+.vip h3{font-size:28px;margin:0 0 43px}
+.vip-percent{font-size:23px;font-weight:700;position:relative;z-index:2}
+.vip-progress{height:17px;background:#06151c;border-radius:20px;overflow:hidden;margin:10px 185px 13px 0}
+.vip-progress i{display:block;width:82.7%;height:100%;background:#ffc05b;border-radius:20px}
+.vip .next{font-size:20px;position:relative;z-index:2}
+.vip-star{
+  position:absolute;right:34px;top:49px;
+  font-size:104px;line-height:1;
+  color:#ffd06b;
+  text-shadow:-11px 0 #e9edf0,0 7px #a96d18;
+  transform:rotate(2deg);
+}
+.reward{min-height:150px}
+.reward.clickable{cursor:pointer}
+.reward.clickable:hover{background:#204653}
+.reward .arrow{margin-left:auto;font-size:28px}
+.reward .lock{margin-left:auto;font-size:20px;color:#9eb9c5}
+.demoVip{text-align:center;color:#718d99;font-size:10px;margin-top:14px}
+@media(max-width:650px){
+  .vip{padding:32px 28px 28px;min-height:255px}
+  .vip-progress{margin-right:180px}
+  .vip-star{right:20px;top:52px;font-size:92px}
+}
+
+.live-strip{display:grid;grid-template-columns:1fr 1fr;gap:25px;color:#a8c1cc;font-size:14px;margin:15px 0 2px;padding:0 3px}
+.live-strip i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#00df4f;margin-right:6px}
+.banner-character{width:180px;height:180px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(145deg,#1179e7,#273fa5);font-size:92px}
+@media(max-width:650px){.live-strip{font-size:12px;gap:14px}.banner-character{width:160px;height:160px;font-size:75px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="logo">V</div>
+  <div class="wallet"><span id="topBal">$82.70 ◉　⌄</span><button>▣</button></div>
+  <button class="topbtn" id="profileBtn">♙</button>
+  <button class="topbtn" id="menuBtn">☰</button>
+</header>
+
+<div class="side" id="side">
+  <button data-page="wallet"><span>💼</span><span>Portfel</span></button>
+  <button data-page="vault"><span>▣</span><span>Sejf</span></button>
+  <button id="sideVip"><span>🏆</span><span>VIP</span></button>
+  <button data-page="partner"><span>♧</span><span>Współpraca</span></button>
+  <button data-page="stats"><span>↗</span><span>Statystyki</span></button>
+  <button data-page="transactions"><span>▤</span><span>Transakcje</span></button>
+  <button data-page="bets"><span>▤</span><span>Moje zakłady</span></button>
+  <button data-page="settings"><span>⚙</span><span>Opcje</span></button>
+  <button data-page="smart"><span>✓</span><span>VYRA Smart</span></button>
+  <button data-page="help"><span>♧</span><span>Pomoc</span></button>
+  <button data-page="logout"><span>↪</span><span>Wyloguj się</span></button>
+</div>
+
+<main>
+<section id="home" class="page active">
+  <div class="banner">
+  <div class="banner-copy">
+    <span class="tag">Only on VYRA</span>
+    <h1>Raves and Waves</h1>
+    <p>Fortune Drops on Cue</p>
+    <button class="play">Play Now!</button>
+  </div>
+  <div class="art"><div class="banner-character">😎</div></div>
+</div>
+  <div class="search"><b>⌕</b>Search VYRA</div>
+  <div class="pills"><button class="pill active">♠ Strona główna kasyna</button><button class="pill">V Tylko na VYRA</button></div>
+  <div class="section-head"><h2>🔥 VYRA Originals</h2><a>Wyświetl wszystko</a></div>
+  <div class="games">
+    <div class="game"><div class="gameart">🎲</div><div class="gameinfo"><h3>DICE</h3><small>VYRA Originals</small></div></div>
+    <div class="game"><div class="gameart">💎</div><div class="gameinfo"><h3>MINES</h3><small>VYRA Originals</small></div></div>
+    <div class="game"><div class="gameart">🟠</div><div class="gameinfo"><h3>PLINKO</h3><small>VYRA Originals</small></div></div>
+    <div class="game"><div class="gameart">🚀</div><div class="gameinfo"><h3>CRASH</h3><small>Demo</small></div></div>
+    <div class="game"><div class="gameart">🃏</div><div class="gameinfo"><h3>BLACKJACK</h3><small>Demo</small></div></div>
+    <div class="game"><div class="gameart">🔴</div><div class="gameinfo"><h3>ROULETTE</h3><small>Demo</small></div></div>
+  </div>
+  <div class="live-strip">
+  <span><i></i> 1 091 w grze</span>
+  <span><i></i> 441 w grze</span>
+</div>
+<div class="section-head"><h2>🎥 Telet​urnieje</h2><a>Zobacz więcej</a></div>
+  <div class="live"><div class="livecard"><div class="liveart">🎤</div><div class="gameinfo"><h3>Crazy Time — Live</h3><small>297 w grze</small></div></div><div class="livecard"><div class="liveart">🎨</div><div class="gameinfo"><h3>Color Game Bonanza</h3><small>19 w grze</small></div></div></div>
+  <div class="section-head"><h2>💳 Ostatnie wpłaty</h2><a>Wyświetl wszystko</a></div>
+  <div class="table" id="deposits"></div>
+  <p class="muted" style="text-align:center;font-size:10px">DEMO — fikcyjna makieta.</p>
+</section>
+
+<section id="browse" class="page"><div class="hero card"><h1>Przeglądaj</h1><p>Znajdź gry, nowości i kategorie.</p></div><div class="search"><b>⌕</b>Search VYRA</div><div class="card"><h2>🎮 Gry</h2><p class="muted">Tylko na VYRA · Nowości · Automaty · VYRA Originals</p></div></section>
+<section id="casino" class="page"><div class="hero"><h1>Kasyno</h1><p>Fikcyjne gry demonstracyjne.</p></div><div class="games"><div class="game"><div class="gameart">🎲</div><div class="gameinfo"><h3>DICE</h3><small>Demo</small></div></div><div class="game"><div class="gameart">💎</div><div class="gameinfo"><h3>MINES</h3><small>Demo</small></div></div><div class="game"><div class="gameart">🟠</div><div class="gameinfo"><h3>PLINKO</h3><small>Demo</small></div></div><div class="game"><div class="gameart">🔴</div><div class="gameinfo"><h3>ROULETTE</h3><small>Demo</small></div></div></div></section>
+<section id="foryou" class="page"><div class="hero"><h1>For You</h1><p>Gry zapisane i polecane.</p></div></section>
+<section id="sport" class="page"><div class="hero"><h1>Sport</h1><p>Widok demonstracyjny bez prawdziwych zakładów.</p></div></section>
+<section id="chat" class="page"><div class="hero"><h1>Czat</h1><p>Demonstracyjny czat użytkowników.</p></div></section>
+
+<section id="wallet" class="page"><div class="hero"><h1>💼 Portfel</h1><p>Twoje środki w tej demonstracyjnej makiecie.</p></div><div class="card"><div class="stat"><span>Saldo</span><strong id="walletBalance">$82.70</strong></div><div class="stat"><span>Waluta</span><strong>USD</strong></div><div class="stat"><span>Status</span><strong>Aktywne</strong></div></div></section>
+<section id="vault" class="page"><div class="hero"><h1>▣ Sejf</h1><p>Bezpieczne miejsce na środki demo.</p></div><div class="card"><h2>Sejf jest pusty</h2><p class="muted">To tylko ekran demonstracyjny.</p></div></section>
+<section id="partner" class="page"><div class="hero"><h1>♧ Współpraca</h1><p>Panel współpracy VYRA.</p></div><div class="card"><h2>Program partnerski</h2><p class="muted">Tutaj możesz później dodać własne informacje.</p></div></section>
+<section id="stats" class="page"><div class="hero"><h1>↗ Statystyki</h1><p>Podsumowanie aktywności demo.</p></div><div class="card"><div class="stat"><span>Wpłaty</span><strong>8</strong></div><div class="stat"><span>Ranga</span><strong>Złota</strong></div><div class="stat"><span>Postęp VIP</span><strong>82,70%</strong></div></div></section>
+<section id="smart" class="page"><div class="hero"><h1>✓ VYRA Smart</h1><p>Panel bezpieczeństwa demonstracyjnego.</p></div><div class="card"><div class="stat"><span>Ochrona konta</span><strong>Aktywna</strong></div><div class="stat"><span>Weryfikacja</span><strong>Demo</strong></div></div></section>
+<section id="help" class="page"><div class="hero"><h1>♧ Pomoc</h1><p>Centrum pomocy VYRA.</p></div><div class="card"><h2>Jak możemy pomóc?</h2><p class="muted">To jest fikcyjna makieta, więc możesz tutaj dodać własne sekcje FAQ lub kontakt.</p></div></section>
+<section id="logout" class="page"><div class="hero"><h1>↪ Wyloguj się</h1><p>To tylko demonstracja.</p></div><div class="card"><h2>Wylogowanie demo</h2><p class="muted">W prawdziwej aplikacji tutaj nastąpiłoby wylogowanie. W tej makiecie nic nie jest wysyłane ani zapisywane na serwerze.</p></div></section>
+<section id="profile" class="page"><div class="hero"><h1>Profil</h1><p>Edytuj dane swojej makiety.</p></div><div class="card">
+<div class="stat"><span>Użytkownik</span><strong id="pName">Wiewix</strong></div><div class="stat"><span>Saldo</span><strong id="pBal">$82.70</strong></div><div class="stat"><span>Ranga</span><strong id="pRank">Złota</strong></div>
+<div class="edit"><label>Nazwa<input id="eName" value="Wiewix"></label><label>Saldo<input id="eBal" value="82.70"></label><label>Ranga<select id="eRank"><option>Złota</option><option>Srebrna</option><option>Brązowa</option><option>Platynowa I</option></select></label><button class="save" id="save">Zapisz zmiany</button></div></div></section>
+<section id="transactions" class="page"><div class="hero"><h1>Transakcje</h1><p>Ostatnie fikcyjne wpłaty.</p></div><div class="table" id="deposits2"></div></section>
+<section id="bets" class="page"><div class="hero"><h1>Moje zakłady</h1><p>Brak prawdziwych zakładów — tylko widok demo.</p></div></section>
+<section id="settings" class="page"><div class="hero"><h1>Opcje</h1><p>Ustawienia makiety.</p></div></section>
+<section id="vault" class="page"><div class="hero"><h1>Sejf</h1><p>Twoje środki w fikcyjnej makiecie.</p></div><div class="card"><div class="stat"><span>Saldo sejfu</span><strong>$0.00</strong></div><div class="stat"><span>Status</span><strong>Nieaktywny</strong></div></div></section>
+<section id="affiliate" class="page"><div class="hero"><h1>Współpraca</h1><p>Panel programu partnerskiego — demo.</p></div><div class="card"><div class="stat"><span>Link polecający</span><strong>VYRA-DEMO</strong></div><div class="stat"><span>Zaproszeni</span><strong>0</strong></div></div></section>
+<section id="stats" class="page"><div class="hero"><h1>Statystyki</h1><p>Statystyki konta demonstracyjnego.</p></div><div class="card"><div class="stat"><span>Gry rozegrane</span><strong>128</strong></div><div class="stat"><span>Ulubione</span><strong>12</strong></div></div></section>
+<section id="smart" class="page"><div class="hero"><h1>VYRA Smart</h1><p>Fikcyjne centrum inteligentnych funkcji.</p></div></section>
+<section id="help" class="page"><div class="hero"><h1>Pomoc</h1><p>Centrum pomocy demonstracyjnej strony.</p></div><div class="card"><h2>Jak działa makieta?</h2><p class="muted">Użyj menu i dolnych zakładek, aby przechodzić między ekranami.</p></div></section>
+</main>
+
+<nav class="nav">
+<button data-page="browse"><b>⌕</b>Przeglądaj</button><button data-page="casino"><b>◈</b>Kasyno</button><button data-page="foryou"><b>✦</b>For You</button><button data-page="sport"><b>◉</b>Sport</button><button data-page="chat"><b>▣</b>Czat</button>
+</nav>
+
+<div class="overlay" id="vipOverlay">
+  <div class="modal vip-modal">
+    <div class="modalhead">
+      <h2>🏆 VIP</h2>
+      <button class="x" id="closeVip">×</button>
+    </div>
+
+    <div class="vip">
+      <h3 id="vipName">Wiewix</h3>
+      <div class="vip-percent"><span id="vipPercent">82,70%</span> ⓘ</div>
+      <div class="vip-progress"><i id="vipProgress"></i></div>
+      <div class="next" id="vipNext">Następny poziom: Platyna I</div>
+      <div class="vip-star">★</div>
+    </div>
+
+    <div class="reward">
+      <div class="rewardicon">⬆️</div>
+      <div><h3>Rakeback</h3><p>Dostępny do odebrania!</p></div>
+      <button class="claim" id="claimReward">Odbierz</button>
+    </div>
+
+    <div class="reward clickable" id="boostRow">
+      <div class="rewardicon">◉</div>
+      <div><h3>Cotygodniowy Boost</h3><p>Następny cotygodniowy Boost<br>za: <b>04d 13h 24m</b></p></div>
+      <b class="arrow">⌄</b>
+    </div>
+
+    <div class="reward clickable" id="monthlyRow">
+      <div class="rewardicon">🎁</div>
+      <div><h3>Comiesięczny bonus</h3><p>Wysyłany raz w miesiącu poprzez<br>e-mail do wszystkich użytkowników<br>spełniających warunki.</p></div>
+      <b class="arrow">⌄</b>
+    </div>
+
+    <div class="reward locked">
+      <div class="rewardicon">🔒</div>
+      <div><h3>Reload</h3><p>Dostępne na poziomie VIP Platyna</p></div>
+      <b class="lock">🔒</b>
+    </div>
+
+    <div class="demoVip">DEMO — fikcyjny system VIP</div>
+  </div>
+</div>
+
+<script>
+const deposits=[
+["11.07.2026","$31.53","Potwierdzono"],["11.07.2026","$20.41","Potwierdzono"],
+["10.07.2026","$45.20","Potwierdzono"],["10.07.2026","$23.85","Potwierdzono"],
+["10.07.2026","$43.39","Potwierdzono"],["10.07.2026","$35.87","Potwierdzono"],
+["10.07.2026","$40.77","Potwierdzono"],["10.07.2026","$43.22","Potwierdzono"]];
+function table(){return '<div class="tr head"><span>Data</span><span>Wartość</span><span>Status</span></div>'+deposits.map(d=>`<div class="tr"><span>${d[0]}</span><span>${d[1]}</span><span class="ok">${d[2]}</span></div>`).join("")}
+document.getElementById("deposits").innerHTML=table();document.getElementById("deposits2").innerHTML=table();
+
+function go(id){
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ const p=document.getElementById(id);if(p)p.classList.add("active");
+ document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));
+ document.getElementById("side").classList.remove("open");window.scrollTo(0,0);
+}
+document.querySelectorAll(".nav button[data-page], .side button[data-page]").forEach(b=>{
+  b.addEventListener("click",()=>go(b.dataset.page));
+});
+document.getElementById("menuBtn").addEventListener("click",()=>document.getElementById("side").classList.toggle("open"));
+document.getElementById("profileBtn").addEventListener("click",()=>{
+  document.getElementById("side").classList.toggle("open");
+});
+document.getElementById("vipBtn").addEventListener("click",()=>document.getElementById("vipOverlay").classList.add("open"));
+document.getElementById("sideVip").addEventListener("click",()=>{
+  document.getElementById("side").classList.remove("open");
+  document.getElementById("vipOverlay").classList.add("open");
+});
+document.getElementById("closeVip").addEventListener("click",()=>document.getElementById("vipOverlay").classList.remove("open"));
+document.getElementById("claimReward").addEventListener("click",()=>{
+  const b=document.getElementById("claimReward");
+  b.textContent="Odebrane ✓"; b.disabled=true; b.style.opacity=".65";
+});
+document.getElementById("boostRow").addEventListener("click",()=>{
+  alert("Cotygodniowy Boost — ekran demonstracyjny.");
+});
+document.getElementById("monthlyRow").addEventListener("click",()=>{
+  alert("Comiesięczny bonus — ekran demonstracyjny.");
+});
+
+document.getElementById("vipOverlay").addEventListener("click",e=>{if(e.target.id==="vipOverlay")e.target.classList.remove("open")});
+document.getElementById("save").addEventListener("click",()=>{
+ let n=document.getElementById("eName").value||"Wiewix",b=Number(document.getElementById("eBal").value||0).toFixed(2),r=document.getElementById("eRank").value;
+ document.getElementById("pName").textContent=n;document.getElementById("pBal").textContent="$"+b;document.getElementById("pRank").textContent=r;
+ document.getElementById("topBal").textContent="$"+b+" ◉　⌄";
+ document.getElementById("walletBalance").textContent="$"+b;
+ document.getElementById("vipName").textContent=n;
+ document.getElementById("vipPercent").textContent=(Math.min(100,Number(b)).toFixed(2).replace(".",","))+"%";
+ document.getElementById("vipProgress").style.width=Math.min(100,Number(b))+"%";
+});
+</script>
+</body>
+</html>
